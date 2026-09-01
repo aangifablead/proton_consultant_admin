@@ -103,14 +103,8 @@ export const AdminGlobalListView: React.FC<AdminGlobalListViewProps> = ({ type }
   return (
     <div className="space-y-6 max-w-7xl mx-auto">
       {/* Header */}
-      <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div>
-          <div className="flex items-center gap-2">
-            <span className="text-xs font-bold uppercase tracking-wider px-2.5 py-0.5 rounded bg-purple-50 text-purple-800 border border-purple-200">
-              Admin Master Table
-            </span>
-            <span className="text-xs text-slate-500 font-medium">{data.length} Total Records</span>
-          </div>
           <h1 className="text-xl sm:text-2xl font-extrabold text-slate-900 mt-1">{title}</h1>
           <p className="text-xs text-slate-500 mt-0.5">{description}</p>
         </div>

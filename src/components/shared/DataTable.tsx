@@ -34,6 +34,7 @@ interface DataTableProps<T> {
   actions?: React.ReactNode;
   exportFileName?: string;
   emptyMessage?: string;
+  hideSearch?: boolean;
 }
 
 export function DataTable<T extends Record<string, any>>({
@@ -47,6 +48,7 @@ export function DataTable<T extends Record<string, any>>({
   actions,
   exportFileName = "export_data",
   emptyMessage = "No records found matching your filters.",
+  hideSearch = false,
 }: DataTableProps<T>) {
   const [searchTerm, setSearchTerm] = useState("");
   const [activeFilters, setActiveFilters] = useState<Record<string, string>>({});
@@ -157,19 +159,21 @@ export function DataTable<T extends Record<string, any>>({
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white p-3.5 rounded-xl border border-slate-200/80 shadow-xs">
         <div className="flex flex-wrap items-center gap-2.5 flex-1">
           {/* Search box */}
-          <div className="relative flex-1 min-w-[220px] max-w-md">
-            <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
-            <input
-              type="text"
-              value={searchTerm}
-              onChange={(e) => {
-                setSearchTerm(e.target.value);
-                setCurrentPage(1);
-              }}
-              placeholder={searchPlaceholder}
-              className="w-full pl-9 pr-3.5 py-1.5 text-sm bg-slate-50 border border-slate-200 rounded-lg focus:outline-hidden focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all placeholder:text-slate-400"
-            />
-          </div>
+          {!hideSearch && (
+            <div className="relative flex-1 min-w-[220px] max-w-md">
+              <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+              <input
+                type="text"
+                value={searchTerm}
+                onChange={(e) => {
+                  setSearchTerm(e.target.value);
+                  setCurrentPage(1);
+                }}
+                placeholder={searchPlaceholder}
+                className="w-full pl-9 pr-3.5 py-1.5 text-sm bg-slate-50 border border-slate-200 rounded-lg focus:outline-hidden focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all placeholder:text-slate-400"
+              />
+            </div>
+          )}
 
           {/* Filter Dropdowns */}
           {filterOptions?.map((filter) => (
@@ -222,7 +226,7 @@ export function DataTable<T extends Record<string, any>>({
                     key={idx}
                     onClick={() => col.sortable && handleSort(col.accessorKey)}
                     className={cn(
-                      "py-3 px-4 select-none whitespace-nowrap",
+                      "py-3 px-4 select-none",
                       col.sortable ? "cursor-pointer hover:bg-slate-100/80 transition-colors" : "",
                       col.className
                     )}

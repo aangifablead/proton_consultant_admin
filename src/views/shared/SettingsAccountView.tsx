@@ -93,6 +93,7 @@ export const SettingsAccountView: React.FC = () => {
       lastActive: "Yesterday at 18:45",
     },
   ]);
+  const [sessionToDelete, setSessionToDelete] = useState<string | "ALL" | null>(null);
 
   // Notification Preferences
   const [emailCaseUpdates, setEmailCaseUpdates] = useState(true);
@@ -178,12 +179,7 @@ export const SettingsAccountView: React.FC = () => {
   };
 
   const handleRevokeSessions = () => {
-    setSessions((prev) => prev.filter((s) => s.isCurrent));
-    addToast({
-      title: "Other Sessions Terminated",
-      description: "All other remote devices have been securely signed out.",
-      type: "info",
-    });
+    setSessionToDelete("ALL");
   };
 
   const handleToggle2FA = () => {
@@ -627,7 +623,7 @@ export const SettingsAccountView: React.FC = () => {
                     </span>
                   ) : (
                     <button
-                      onClick={() => setSessions((prev) => prev.filter((s) => s.id !== sess.id))}
+                      onClick={() => setSessionToDelete(sess.id)}
                       className="text-xs text-slate-400 hover:text-rose-600 font-medium"
                     >
                       Revoke
@@ -1051,6 +1047,61 @@ export const SettingsAccountView: React.FC = () => {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* Confirmation Modal */}
+      {sessionToDelete && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-sm px-4">
+          <div className="bg-white rounded-2xl shadow-xl border border-slate-200/80 w-full max-w-sm overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+            <div className="p-5 border-b border-slate-200/80 flex items-center gap-3 bg-slate-50/50">
+              <div className="w-8 h-8 rounded-full bg-rose-100 flex items-center justify-center shrink-0">
+                <AlertTriangle className="w-4 h-4 text-rose-600" />
+              </div>
+              <h3 className="font-bold text-slate-900">Confirm Action</h3>
+            </div>
+            <div className="p-5">
+              <p className="text-sm text-slate-600">
+                {sessionToDelete === "ALL" 
+                  ? "Are you sure you want to revoke ALL other sessions? Those devices will be logged out immediately." 
+                  : "Are you sure you want to revoke this session? The device will be logged out immediately."}
+              </p>
+            </div>
+            <div className="p-4 bg-slate-50 border-t border-slate-200/80 flex justify-end gap-3">
+              <button
+                onClick={() => setSessionToDelete(null)}
+                className="px-4 py-2 text-xs font-bold text-slate-600 hover:text-slate-900 transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => {
+                  if (sessionToDelete === "ALL") {
+                    setSessions((prev) => prev.filter((s) => s.isCurrent));
+                    addToast({
+                      title: "Other Sessions Terminated",
+                      description: "All other remote devices have been securely signed out.",
+                      type: "info",
+                    });
+                  } else {
+                    const sess = sessions.find((s) => s.id === sessionToDelete);
+                    if (sess) {
+                      setSessions((prev) => prev.filter((s) => s.id !== sessionToDelete));
+                      addToast({
+                        title: "Session Terminated",
+                        description: `The session on ${sess.device} has been revoked.`,
+                        type: "info"
+                      });
+                    }
+                  }
+                  setSessionToDelete(null);
+                }}
+                className="px-4 py-2 text-xs font-bold text-white bg-rose-600 hover:bg-rose-700 rounded-lg shadow-sm transition-colors"
+              >
+                Yes, Revoke
+              </button>
+            </div>
           </div>
         </div>
       )}

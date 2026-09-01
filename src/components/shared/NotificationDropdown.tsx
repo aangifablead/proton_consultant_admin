@@ -116,6 +116,19 @@ export const NotificationDropdown: React.FC<NotificationDropdownProps> = ({ onNa
               ))
             )}
           </div>
+          
+          {/* View All Footer */}
+          <div className="p-3 border-t border-slate-100 bg-slate-50/50">
+            <button 
+              onClick={() => {
+                if (onNavigate) onNavigate("/admin/notifications");
+                setIsOpen(false);
+              }}
+              className="w-full py-1 text-center text-xs font-bold text-blue-600 hover:text-blue-800 transition-colors"
+            >
+              View all notifications
+            </button>
+          </div>
         </div>
       )}
     </div>

@@ -50,14 +50,8 @@ export const AdminPaymentsView: React.FC = () => {
   return (
     <div className="space-y-6 max-w-7xl mx-auto">
       {/* Header */}
-      <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div>
-          <div className="flex items-center gap-2">
-            <span className="text-xs font-bold uppercase tracking-wider px-2.5 py-0.5 rounded bg-emerald-50 text-emerald-800 border border-emerald-200">
-              Escrow & Retainer Billing
-            </span>
-            <span className="text-xs text-slate-500 font-medium">Multi-Currency Compliant</span>
-          </div>
           <h1 className="text-xl sm:text-2xl font-extrabold text-slate-900 mt-1">
             Global Payments & Financial Ledger
           </h1>
@@ -117,9 +111,9 @@ export const AdminPaymentsView: React.FC = () => {
         </div>
 
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs border-collapse">
+          <table className="w-full text-left text-sm border-collapse">
             <thead>
-              <tr className="bg-slate-50 border-b border-slate-200 text-slate-500 font-semibold uppercase tracking-wider">
+              <tr className="bg-slate-50 border-b border-slate-200 text-slate-500 font-semibold uppercase tracking-wider text-xs">
                 <th className="py-3 px-4">Invoice Number</th>
                 <th className="py-3 px-4">Client Name</th>
                 <th className="py-3 px-4">Milestone Description</th>

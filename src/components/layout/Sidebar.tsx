@@ -1,4 +1,5 @@
 import React from "react";
+import { useSearchParams } from "next/navigation";
 import { useAuth } from "../../context/AuthContext";
 import { 
   LayoutDashboard, 
@@ -21,7 +22,7 @@ import {
   Server,
   PlusCircle,
   ExternalLink,
-  Lock
+  Bell
 } from "lucide-react";
 import { cn } from "../../lib/utils";
 
@@ -46,6 +47,7 @@ interface NavGroup {
 
 export const Sidebar: React.FC<SidebarProps> = ({ currentPath, onNavigate, onCloseMobile }) => {
   const { currentRole, currentUser } = useAuth();
+  const searchParams = useSearchParams();
 
   // Helper to handle link click
   const handleClick = (path: string) => {
@@ -64,6 +66,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentPath, onNavigate, onClo
         { label: "Global Leads", path: "/admin/leads", icon: UserCheck },
         { label: "Global Cases", path: "/admin/cases", icon: FolderKanban },
         { label: "Documents Queue", path: "/admin/documents", icon: Files },
+        { label: "Appointment Oversight", path: "/admin/appointments", icon: Calendar },
       ],
     },
     {
@@ -77,6 +80,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentPath, onNavigate, onClo
       groupTitle: "Governance & Security",
       items: [
         { label: "System Config", path: "/admin/config", icon: Sliders },
+        { label: "Notifications", path: "/admin/notifications", icon: Bell },
         { label: "Audit Logs", path: "/admin/audit", icon: Activity },
         ...(currentRole === "super_admin"
           ? [{ label: "RBAC & Security", path: "/admin/system", icon: ShieldCheck, badge: "Super Admin" }]
@@ -122,17 +126,36 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentPath, onNavigate, onClo
       </div>
 
       {/* Navigation Links with Grouped Headers */}
-      <div className="flex-1 overflow-y-auto py-3 px-3 space-y-4 scrollbar-thin">
+      <div className="flex-1 overflow-y-auto py-3 px-3 space-y-3 no-scrollbar">
         {navGroups.map((group, gIdx) => (
-          <div key={gIdx} className="space-y-1">
+          <div key={gIdx} className="space-y-0.5">
             {group.groupTitle && (
-              <div className="px-3 pt-1 pb-1 text-[10px] font-extrabold uppercase tracking-wider text-slate-500">
+              <div className="px-3 pt-1 pb-1 text-[11px] font-extrabold uppercase tracking-wider text-slate-500">
                 {group.groupTitle}
               </div>
             )}
 
             {group.items.map((item) => {
-              const isActive = currentPath === item.path;
+              const itemBase = item.path.split('?')[0];
+              const itemQuery = item.path.split('?')[1] || "";
+              
+              let isActive = false;
+              if (currentPath === itemBase) {
+                if (itemQuery) {
+                  // Item requires specific query params
+                  const itemParams = new URLSearchParams(itemQuery);
+                  isActive = Array.from(itemParams.keys()).every(k => searchParams.get(k) === itemParams.get(k));
+                } else {
+                  // Item is base path. It should NOT be active if there's a tab param that another item uses (like tab=notifications)
+                  // For a perfect fix specifically for the /admin/config clash:
+                  if (itemBase === "/admin/config" && searchParams.get("tab") === "notifications") {
+                    isActive = false;
+                  } else {
+                    isActive = true;
+                  }
+                }
+              }
+
               const Icon = item.icon;
 
               return (
@@ -140,7 +163,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentPath, onNavigate, onClo
                   key={item.path}
                   onClick={() => handleClick(item.path)}
                   className={cn(
-                    "w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold transition-all duration-150 group text-left",
+                    "w-full flex items-center justify-between px-3 py-1.5 rounded-xl text-sm font-semibold transition-all duration-150 group text-left",
                     isActive
                       ? "bg-blue-600 text-white shadow-xs font-bold"
                       : "text-slate-400 hover:text-white hover:bg-slate-800/70"
@@ -149,7 +172,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentPath, onNavigate, onClo
                   <div className="flex items-center gap-2.5 min-w-0">
                     <Icon
                       className={cn(
-                        "w-4 h-4 shrink-0 transition-colors",
+                        "w-[18px] h-[18px] shrink-0 transition-colors",
                         isActive ? "text-white" : "text-slate-400 group-hover:text-sky-400"
                       )}
                     />
@@ -188,38 +211,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentPath, onNavigate, onClo
           </div>
         ))}
 
-        {/* Role-Specific Contextual Card to eliminate dead void */}
-        <div className="pt-2">
-            <div className="p-3 bg-gradient-to-br from-slate-800/80 to-slate-900/90 rounded-2xl border border-slate-700/60 shadow-xs space-y-2">
-              <div className="flex items-center justify-between">
-                <span className="text-[10px] font-bold uppercase text-sky-400 tracking-wider">Enterprise Security</span>
-                <span className="flex items-center gap-1 text-[10px] text-emerald-400 font-mono">
-                  <Lock className="w-3 h-3 text-emerald-400" /> SSL 256-Bit
-                </span>
-              </div>
-              <div className="text-[11px] text-slate-300 space-y-1">
-                <div className="flex items-center justify-between text-slate-400 text-[10px]">
-                  <span>Global Branches</span>
-                  <span className="text-white font-bold">5 Online</span>
-                </div>
-                <div className="flex items-center justify-between text-slate-400 text-[10px]">
-                  <span>MFA / TOTP Policy</span>
-                  <span className="text-emerald-400 font-bold">Enforced</span>
-                </div>
-                <div className="flex items-center justify-between text-slate-400 text-[10px]">
-                  <span>Audit Trail</span>
-                  <span className="text-slate-300 font-mono">Immutable</span>
-                </div>
-              </div>
-              <button
-                onClick={() => handleClick("/admin/system")}
-                className="w-full py-1.5 text-[11px] font-bold text-center text-blue-300 bg-blue-950/60 hover:bg-blue-900/80 border border-blue-800/60 rounded-lg transition-colors flex items-center justify-center gap-1.5"
-              >
-                <ShieldCheck className="w-3.5 h-3.5" />
-                <span>Security Matrix</span>
-              </button>
-            </div>
-        </div>
+
       </div>
 
       {/* Footer Branch & Compliance Indicator */}

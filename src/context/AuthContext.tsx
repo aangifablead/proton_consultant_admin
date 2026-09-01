@@ -61,9 +61,14 @@ interface AuthContextType {
   addLead: (lead: Omit<Lead, "id" | "createdAt" | "qualificationScore" | "lastActivity">) => void;
   updateLeadStage: (leadId: string, newStage: Lead["stage"]) => void;
   convertLeadToClient: (leadId: string) => void;
+  reassignLead: (leadId: string, newEmployeeName: string) => void;
+  rejectLead: (leadId: string, reason: string) => void;
+  addLeadNote: (leadId: string, note: string) => void;
   updateDocumentStatus: (docId: string, status: DocumentItem["status"], notes?: string) => void;
   uploadDocument: (docData: { name: string; category: DocumentItem["category"]; fileSize: string }) => void;
   bookAppointment: (appointment: Omit<Appointment, "id" | "status">) => void;
+  cancelAppointment: (id: string) => void;
+  reassignAppointment: (id: string, newCounsel: string) => void;
   payInvoice: (invoiceId: string, method?: Invoice["paymentMethod"]) => void;
   sendMessage: (text: string) => void;
   createTask: (task: Omit<Task, "id" | "createdAt">) => void;
@@ -73,6 +78,8 @@ interface AuthContextType {
   updateUserProfile: (updates: Partial<User>) => void;
   markNotificationAsRead: (id: string) => void;
   clearAllNotifications: () => void;
+  deleteNotification: (id: string) => void;
+  deleteAllNotifications: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -230,6 +237,45 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     });
   };
 
+  const reassignLead = (leadId: string, newEmployeeName: string) => {
+    setLeads((prev) =>
+      prev.map((lead) => (lead.id === leadId ? { ...lead, assignedTo: newEmployeeName, lastActivity: "Reassigned" } : lead))
+    );
+    const lead = leads.find((l) => l.id === leadId);
+    logAudit("Lead Reassigned", "Lead", leadId, `Reassigned ${lead?.name || leadId} to ${newEmployeeName}`);
+    addToast({
+      title: "Lead Reassigned",
+      description: `Lead reassigned to ${newEmployeeName}.`,
+      type: "success",
+    });
+  };
+
+  const rejectLead = (leadId: string, reason: string) => {
+    setLeads((prev) =>
+      prev.map((lead) => (lead.id === leadId ? { ...lead, stage: "Lost", lastActivity: "Closed: " + reason } : lead))
+    );
+    const lead = leads.find((l) => l.id === leadId);
+    logAudit("Lead Rejected/Closed", "Lead", leadId, `Closed ${lead?.name || leadId}. Reason: ${reason}`);
+    addToast({
+      title: "Lead Closed",
+      description: `Lead has been closed and removed from active pipeline.`,
+      type: "info",
+    });
+  };
+
+  const addLeadNote = (leadId: string, note: string) => {
+    setLeads((prev) =>
+      prev.map((lead) => (lead.id === leadId ? { ...lead, notes: [...lead.notes, note], lastActivity: "Note added" } : lead))
+    );
+    const lead = leads.find((l) => l.id === leadId);
+    logAudit("Lead Note Added", "Lead", leadId, `Added internal note to ${lead?.name || leadId}`);
+    addToast({
+      title: "Note Added",
+      description: `Internal note saved to lead profile.`,
+      type: "success",
+    });
+  };
+
   const updateDocumentStatus = (docId: string, status: DocumentItem["status"], notes?: string) => {
     setDocuments((prev) =>
       prev.map((doc) =>
@@ -288,6 +334,26 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     addToast({
       title: "Appointment Confirmed",
       description: `Scheduled for ${newApt.date} at ${newApt.time} (${newApt.location}).`,
+      type: "success",
+    });
+  };
+
+  const cancelAppointment = (id: string) => {
+    setAppointments((prev) => prev.map((a) => (a.id === id ? { ...a, status: "Cancelled" } : a)));
+    logAudit("Appointment Cancelled", "Appointment", id, `Cancelled by Admin`);
+    addToast({
+      title: "Appointment Cancelled",
+      description: "The appointment has been marked as cancelled.",
+      type: "success",
+    });
+  };
+
+  const reassignAppointment = (id: string, newCounsel: string) => {
+    setAppointments((prev) => prev.map((a) => (a.id === id ? { ...a, assignedTo: newCounsel } : a)));
+    logAudit("Appointment Reassigned", "Appointment", id, `Reassigned to ${newCounsel}`);
+    addToast({
+      title: "Counsel Reassigned",
+      description: `Appointment reassigned to ${newCounsel}.`,
       type: "success",
     });
   };
@@ -405,6 +471,24 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
   };
 
+  const deleteNotification = (id: string) => {
+    setNotifications((prev) => prev.filter((n) => n.id !== id));
+    addToast({
+      title: "Notification Deleted",
+      description: "The notification was permanently removed.",
+      type: "success",
+    });
+  };
+
+  const deleteAllNotifications = () => {
+    setNotifications([]);
+    addToast({
+      title: "Inbox Cleared",
+      description: "All notifications were permanently removed.",
+      type: "success",
+    });
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -429,9 +513,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         addLead,
         updateLeadStage,
         convertLeadToClient,
+        reassignLead,
+        rejectLead,
+        addLeadNote,
         updateDocumentStatus,
         uploadDocument,
         bookAppointment,
+        cancelAppointment,
+        reassignAppointment,
         payInvoice,
         sendMessage,
         createTask,
@@ -441,6 +530,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         updateUserProfile,
         markNotificationAsRead,
         clearAllNotifications,
+        deleteNotification,
+        deleteAllNotifications,
       }}
     >
       {children}

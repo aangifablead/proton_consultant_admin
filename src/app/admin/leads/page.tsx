@@ -1,6 +1,6 @@
 "use client";
-import { AdminGlobalListView } from "../../../views/admin/AdminGlobalListView";
+import { AdminLeadsView } from "../../../views/admin/AdminLeadsView";
 
 export default function Page() {
-  return <AdminGlobalListView type="leads" />;
+  return <AdminLeadsView />;
 }

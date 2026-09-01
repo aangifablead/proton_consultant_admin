@@ -3,7 +3,6 @@ import type { Metadata } from 'next';
 import { AuthProvider } from '../context/AuthContext';
 import { AppShell } from '../components/layout/AppShell';
 import '../index.css';
-
 export const metadata: Metadata = {
   title: 'Proton Consultancy',
   description: 'Proton Consultancy Application',

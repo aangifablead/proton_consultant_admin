@@ -102,6 +102,7 @@ export interface Lead {
   notes: string[];
   qualificationScore: number; // 0 - 100
   lastActivity: string;
+  priority?: "High" | "Medium" | "Low";
 }
 
 export type AppointmentStatus = "Scheduled" | "Completed" | "Cancelled" | "Rescheduled";
