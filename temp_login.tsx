@@ -9,7 +9,9 @@ import {
   Mail, 
   ArrowRight, 
   ShieldCheck, 
-  Crown, 
+  UserCheck, 
+  Briefcase, 
+  Users, 
   CheckCircle2 
 } from "lucide-react";
 import { cn } from "../../lib/utils";
@@ -18,26 +20,34 @@ export const LoginPage: React.FC = () => {
   const router = useRouter();
   const onNavigate = (path: string) => router.push(path);
   const { loginAs } = useAuth();
-  const [selectedRole, setSelectedRole] = useState<UserRole>("admin");
-  const [email, setEmail] = useState("samantha.reed@protonconsultancy.com");
+  const [selectedRole, setSelectedRole] = useState<UserRole>("client");
+  const [email, setEmail] = useState("alistair.sterling@example.com");
   const [password, setPassword] = useState("••••••••••••");
 
   const rolePresets: { role: UserRole; name: string; title: string; email: string; path: string; icon: React.ReactNode }[] = [
     {
-      role: "admin",
-      name: "Samantha Reed",
-      title: "System & Compliance Administrator",
-      email: "samantha.reed@protonconsultancy.com",
-      path: "/admin",
-      icon: <ShieldCheck />,
+      role: "client",
+      name: "Dr. Alistair Sterling",
+      title: "Active Applicant (Canada PR)",
+      email: "alistair.sterling@example.com",
+      path: "/portal",
+      icon: <UserCheck />,
     },
     {
-      role: "super_admin",
-      name: "David Sterling, Esq.",
-      title: "Senior Partner & Global Super Admin",
-      email: "david.sterling@protonconsultancy.com",
-      path: "/admin/system",
-      icon: <Crown />,
+      role: "employee",
+      name: "Elena Vance",
+      title: "Senior Immigration Attorney",
+      email: "elena.vance@protonconsultancy.com",
+      path: "/staff",
+      icon: <Briefcase />,
+    },
+    {
+      role: "manager",
+      name: "Marcus Thorne",
+      title: "Operations & Case Review Manager",
+      email: "marcus.thorne@protonconsultancy.com",
+      path: "/staff/team",
+      icon: <Users />,
     },
   ];
 
@@ -54,7 +64,7 @@ export const LoginPage: React.FC = () => {
   };
 
   return (
-    <div className="flex-1 w-full min-h-[calc(100vh-4rem)] bg-slate-50 flex flex-col md:flex-row font-sans">
+    <div className="h-screen overflow-hidden bg-slate-50 flex flex-col md:flex-row font-sans w-full">
       {/* Left Panel: Branding & Role Selection */}
       <div className="w-full md:w-5/12 bg-slate-900 p-6 lg:p-10 flex flex-col justify-between relative overflow-hidden text-white border-r border-slate-800">
         {/* Decorative dynamic gradients */}
@@ -139,11 +149,11 @@ export const LoginPage: React.FC = () => {
         
         <div className="w-full max-w-[400px] bg-white rounded-3xl p-8 shadow-[0_8px_40px_-12px_rgba(0,0,0,0.1)] border border-slate-100 relative z-10">
           <div className="mb-8 text-center">
-            <div className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-blue-600 bg-blue-50 px-3 py-1.5 rounded-full border border-blue-100 mb-5 shadow-sm">
+            <div className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-emerald-600 bg-emerald-50 px-3 py-1.5 rounded-full border border-emerald-100 mb-5 shadow-sm">
               <ShieldCheck className="w-3.5 h-3.5" />
-              Encrypted Session
+              Secure Encrypted Session
             </div>
-            <h2 className="text-2xl font-extrabold text-slate-900 tracking-tight">Sign In To Workspace</h2>
+            <h2 className="text-2xl font-extrabold text-slate-900 tracking-tight">Sign In</h2>
             <p className="text-slate-500 mt-1.5 text-xs font-medium">
               Authenticating as <span className="font-bold text-blue-600 uppercase tracking-wider">{selectedRole.replace("_", " ")}</span>
             </p>
@@ -151,7 +161,7 @@ export const LoginPage: React.FC = () => {
 
           <form onSubmit={handleLogin} className="space-y-4">
             <div className="space-y-1.5">
-              <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider">Corporate / Client Email</label>
+              <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider">Email Address</label>
               <div className="relative group">
                 <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 group-focus-within:text-blue-500 transition-colors" />
                 <input
@@ -169,7 +179,7 @@ export const LoginPage: React.FC = () => {
               <div className="flex items-center justify-between">
                 <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider">Password</label>
                 <span className="text-[10px] text-blue-600 font-bold bg-blue-50 px-2 py-0.5 rounded cursor-pointer hover:bg-blue-100 transition-colors">
-                  Demo Mode (Any PW)
+                  Demo Mode Active
                 </span>
               </div>
               <div className="relative group">
@@ -185,19 +195,12 @@ export const LoginPage: React.FC = () => {
               </div>
             </div>
 
-            <div className="p-3 bg-blue-50/50 rounded-xl border border-blue-100 text-xs text-slate-600 flex items-start gap-2 mt-2">
-              <ShieldCheck className="w-4 h-4 text-blue-600 shrink-0 mt-0.5" />
-              <span>
-                Role will be auto-detected upon sign in. You can also switch roles anytime via the top bar banner.
-              </span>
-            </div>
-
-            <div className="pt-2">
+            <div className="pt-4">
               <button
                 type="submit"
                 className="w-full py-3 text-[14px] font-bold text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 active:from-blue-700 active:to-indigo-700 rounded-xl shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 group"
               >
-                <span>Enter Workspace</span>
+                <span>Continue to Dashboard</span>
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </button>
             </div>
