@@ -1,0 +1,6 @@
+{
+  "name": "Proton Visa Consultancy",
+  "description": "Comprehensive Visa & Immigration Consultancy Platform with dedicated Client Portal, Staff Workspace, and Executive Admin Management.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
