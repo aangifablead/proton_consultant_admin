@@ -78,8 +78,8 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [currentRole, setCurrentRole] = useState<UserRole>("client");
-  const [currentUser, setCurrentUser] = useState<User | null>(MOCK_USERS.client);
+  const [currentRole, setCurrentRole] = useState<UserRole>("admin");
+  const [currentUser, setCurrentUser] = useState<User | null>(MOCK_USERS.admin);
   
   const [cases, setCases] = useState<Case[]>(MOCK_ALL_CASES);
   const [leads, setLeads] = useState<Lead[]>(MOCK_LEADS);

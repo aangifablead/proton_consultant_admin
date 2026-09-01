@@ -82,7 +82,7 @@ export const LeadCaptureSection: React.FC<LeadCaptureSectionProps> = ({ initialV
       phone: data.phone,
       visaInterest: mappedVisaCategory,
       destination: mappedDest,
-      source: "Landing Page Form",
+      source: "Website Form",
       stage: "New",
       assignedTo: "Elena Vance",
       notes: [

@@ -90,8 +90,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 </button>
                 <button
                   onClick={() => {
-                    if (currentRole === "client") onNavigate("/portal");
-                    else if (currentRole === "employee" || currentRole === "manager") onNavigate("/staff");
+                    if (currentRole === "super_admin") onNavigate("/admin/system");
                     else onNavigate("/admin");
                   }}
                   className="inline-flex items-center gap-1 px-2.5 sm:px-3 py-1.5 text-xs font-semibold text-blue-700 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors"

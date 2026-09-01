@@ -21,8 +21,8 @@ export const LoginPage: React.FC = () => {
   const router = useRouter();
   const onNavigate = (path: string) => router.push(path);
   const { loginAs } = useAuth();
-  const [selectedRole, setSelectedRole] = useState<UserRole>("client");
-  const [email, setEmail] = useState("alistair.sterling@example.com");
+  const [selectedRole, setSelectedRole] = useState<UserRole>("admin");
+  const [email, setEmail] = useState("samantha.reed@protonconsultancy.com");
   const [password, setPassword] = useState("••••••••••••");
 
   const rolePresets: { role: UserRole; name: string; title: string; email: string; path: string; icon: React.ReactNode }[] = [
@@ -163,7 +163,7 @@ export const LoginPage: React.FC = () => {
                 type="submit"
                 className="w-full py-2.5 text-sm font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-xl shadow-md transition-all flex items-center justify-center gap-2"
               >
-                <span>Enter {selectedRole === "client" ? "Client Portal" : "Staff Workspace"}</span>
+                <span>Enter Workspace</span>
                 <ArrowRight className="w-4 h-4" />
               </button>
             </form>

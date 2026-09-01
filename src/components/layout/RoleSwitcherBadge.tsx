@@ -13,30 +13,6 @@ export const RoleSwitcherBadge: React.FC<RoleSwitcherBadgeProps> = ({ onNavigate
 
   const roles: { role: UserRole; label: string; shortLabel: string; desc: string; icon: React.ReactNode; defaultPath: string }[] = [
     {
-      role: "client",
-      label: "Client",
-      shortLabel: "Client",
-      desc: "Dr. Alistair Sterling (Applicant)",
-      icon: <UserCheck className="w-3.5 h-3.5 shrink-0" />,
-      defaultPath: "/portal",
-    },
-    {
-      role: "employee",
-      label: "Staff / Lawyer",
-      shortLabel: "Staff",
-      desc: "Elena Vance (Attorney)",
-      icon: <Briefcase className="w-3.5 h-3.5 shrink-0" />,
-      defaultPath: "/staff",
-    },
-    {
-      role: "manager",
-      label: "Manager",
-      shortLabel: "Manager",
-      desc: "Marcus Thorne (Ops Lead)",
-      icon: <Users className="w-3.5 h-3.5 shrink-0" />,
-      defaultPath: "/staff/team",
-    },
-    {
       role: "admin",
       label: "Admin",
       shortLabel: "Admin",

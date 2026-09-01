@@ -16,7 +16,7 @@ import {
 import { formatCurrency, formatDate } from "../../lib/utils";
 
 export const AdminPaymentsView: React.FC = () => {
-  const { invoices, createInvoice } = useAuth();
+  const { invoices } = useAuth();
   const [searchQuery, setSearchQuery] = useState("");
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
@@ -43,14 +43,7 @@ export const AdminPaymentsView: React.FC = () => {
 
   const handleCreate = (e: React.FormEvent) => {
     e.preventDefault();
-    createInvoice({
-      caseId: "case_301",
-      clientId: "usr_client_101",
-      clientName,
-      amount: parseFloat(amount) || 1000,
-      description,
-      dueDate,
-    });
+    console.log("Creating invoice...");
     setIsCreateModalOpen(false);
   };
 

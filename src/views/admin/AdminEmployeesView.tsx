@@ -21,7 +21,7 @@ export const AdminEmployeesView: React.FC = () => {
   // Form State
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [role, setRole] = useState<UserRole>("employee");
+  const [role, setRole] = useState<UserRole>("admin");
   const [branch, setBranch] = useState("Toronto HQ");
 
   const filteredEmployees = employees.filter(
@@ -38,6 +38,11 @@ export const AdminEmployeesView: React.FC = () => {
       email,
       role,
       branch,
+      department: "Legal",
+      phone: "+1 555-0000",
+      status: "Active",
+      leadsAssigned: 0,
+      avatar: "",
       activeCasesCount: 0,
       conversionRate: 85,
     });

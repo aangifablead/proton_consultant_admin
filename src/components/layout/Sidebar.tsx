@@ -53,61 +53,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentPath, onNavigate, onClo
     if (onCloseMobile) onCloseMobile();
   };
 
-  // Grouped Navigation for Client
-  const clientNavGroups: NavGroup[] = [
-    {
-      groupTitle: "My Application",
-      items: [
-        { label: "Dashboard", path: "/portal", icon: LayoutDashboard },
-        { label: "My Case Tracker", path: "/portal/case", icon: Briefcase },
-        { label: "Intake Questionnaire", path: "/portal/intake", icon: FileEdit, badge: "Adaptive" },
-        { label: "Document Vault", path: "/portal/documents", icon: Files, count: 2 },
-      ],
-    },
-    {
-      groupTitle: "Engagement & Billing",
-      items: [
-        { label: "Appointments", path: "/portal/appointments", icon: Calendar },
-        { label: "Invoices & Retainer", path: "/portal/payments", icon: CreditCard, count: 1 },
-        { label: "Counsel Messages", path: "/portal/messages", icon: MessageSquare },
-      ],
-    },
-    {
-      groupTitle: "Preferences",
-      items: [
-        { label: "Settings & Account", path: "/settings", icon: Settings },
-      ],
-    },
-  ];
 
-  // Grouped Navigation for Staff / Manager
-  const staffNavGroups: NavGroup[] = [
-    {
-      groupTitle: "Casework & Intake",
-      items: [
-        { label: "Staff Dashboard", path: "/staff", icon: LayoutDashboard },
-        { label: "Leads Board", path: "/staff/leads", icon: UserCheck, count: 5 },
-        { label: "Client Cases", path: "/staff/cases", icon: FolderKanban, count: 4 },
-        { label: "Document Review", path: "/staff/documents", icon: Files, badge: "Queue" },
-      ],
-    },
-    {
-      groupTitle: "Operations & Tasks",
-      items: [
-        { label: "Tasks & Sprints", path: "/staff/tasks", icon: CheckSquare, count: 3 },
-        { label: "Appointments", path: "/staff/appointments", icon: Calendar },
-        ...(currentRole === "manager"
-          ? [{ label: "Team & Approvals", path: "/staff/team", icon: Users, badge: "Manager" }]
-          : []),
-      ],
-    },
-    {
-      groupTitle: "Preferences",
-      items: [
-        { label: "Settings & Account", path: "/settings", icon: Settings },
-      ],
-    },
-  ];
 
   // Grouped Navigation for Admin & Super Admin
   const adminNavGroups: NavGroup[] = [
@@ -146,17 +92,12 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentPath, onNavigate, onClo
   ];
 
   const getActiveNavGroups = () => {
-    if (currentRole === "client") return clientNavGroups;
-    if (currentRole === "employee" || currentRole === "manager") return staffNavGroups;
     return adminNavGroups;
   };
 
   const navGroups = getActiveNavGroups();
 
   const getWorkspaceTitle = () => {
-    if (currentRole === "client") return "Client Portal";
-    if (currentRole === "employee") return "Staff Workspace";
-    if (currentRole === "manager") return "Manager Workspace";
     if (currentRole === "admin") return "Admin Operations";
     return "Executive Control";
   };
@@ -249,58 +190,6 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentPath, onNavigate, onClo
 
         {/* Role-Specific Contextual Card to eliminate dead void */}
         <div className="pt-2">
-          {currentRole === "client" ? (
-            <div className="p-3 bg-gradient-to-br from-slate-800/80 to-slate-900/90 rounded-2xl border border-slate-700/60 shadow-xs space-y-2">
-              <div className="flex items-center justify-between">
-                <span className="text-[10px] font-bold uppercase text-sky-400 tracking-wider">Assigned Counsel</span>
-                <span className="flex items-center gap-1 text-[10px] text-emerald-400">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" /> Online
-                </span>
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="w-7 h-7 rounded-lg bg-blue-700 text-white flex items-center justify-center font-bold text-xs shrink-0">
-                  EV
-                </div>
-                <div className="min-w-0">
-                  <p className="text-xs font-bold text-white truncate">Elena Vance, Esq.</p>
-                  <p className="text-[10px] text-slate-400 truncate">RCIC #R53210 • IRCC Authorized</p>
-                </div>
-              </div>
-              <button
-                onClick={() => handleClick("/portal/messages")}
-                className="w-full py-1.5 text-[11px] font-bold text-center text-blue-300 bg-blue-950/60 hover:bg-blue-900/80 border border-blue-800/60 rounded-lg transition-colors flex items-center justify-center gap-1.5"
-              >
-                <MessageSquare className="w-3.5 h-3.5" />
-                <span>Message Advisor</span>
-              </button>
-            </div>
-          ) : currentRole === "employee" || currentRole === "manager" ? (
-            <div className="p-3 bg-gradient-to-br from-slate-800/80 to-slate-900/90 rounded-2xl border border-slate-700/60 shadow-xs space-y-2">
-              <div className="flex items-center justify-between">
-                <span className="text-[10px] font-bold uppercase text-sky-400 tracking-wider">Lodgement Gateway</span>
-                <span className="flex items-center gap-1 text-[10px] text-emerald-400">
-                  <CheckCircle2 className="w-3 h-3 text-emerald-400" /> Active
-                </span>
-              </div>
-              <div className="text-[11px] text-slate-300 space-y-1">
-                <div className="flex items-center justify-between text-slate-400 text-[10px]">
-                  <span>IRCC / MARA Portal</span>
-                  <span className="text-white font-mono">Sync 100%</span>
-                </div>
-                <div className="flex items-center justify-between text-slate-400 text-[10px]">
-                  <span>Queued Documents</span>
-                  <span className="text-amber-400 font-bold">4 Pending</span>
-                </div>
-              </div>
-              <button
-                onClick={() => handleClick("/staff/leads")}
-                className="w-full py-1.5 text-[11px] font-bold text-center text-blue-300 bg-blue-950/60 hover:bg-blue-900/80 border border-blue-800/60 rounded-lg transition-colors flex items-center justify-center gap-1.5"
-              >
-                <PlusCircle className="w-3.5 h-3.5" />
-                <span>Add New Lead</span>
-              </button>
-            </div>
-          ) : (
             <div className="p-3 bg-gradient-to-br from-slate-800/80 to-slate-900/90 rounded-2xl border border-slate-700/60 shadow-xs space-y-2">
               <div className="flex items-center justify-between">
                 <span className="text-[10px] font-bold uppercase text-sky-400 tracking-wider">Enterprise Security</span>
@@ -330,7 +219,6 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentPath, onNavigate, onClo
                 <span>Security Matrix</span>
               </button>
             </div>
-          )}
         </div>
       </div>
 

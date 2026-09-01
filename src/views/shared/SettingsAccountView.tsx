@@ -43,20 +43,14 @@ export const SettingsAccountView: React.FC = () => {
   const [whatsapp, setWhatsapp] = useState("+1 (416) 890-4421");
   const [branch, setBranch] = useState(currentUser?.branch || "Toronto Central (HQ)");
   const [title, setTitle] = useState(currentUser?.title || (
-    currentRole === "client" 
-      ? "Principal Visa Applicant" 
-      : currentRole === "employee" 
-      ? "Senior Immigration Attorney (RCIC #R53210)" 
-      : currentRole === "manager" 
-      ? "Legal Operations Lead & MARA Specialist" 
-      : currentRole === "admin" 
+    currentRole === "admin" 
       ? "Practice Director & Compliance Lead" 
       : "Managing Partner & Super Administrator"
   ));
   const [bio, setBio] = useState(
     currentUser?.bio || 
-    (currentRole === "client"
-      ? "Prospective permanent residency candidate applying under Federal Express Entry / PNP Skilled Stream."
+    (currentRole === "admin"
+      ? "Practice Director & Compliance Lead."
       : "Regulated immigration consultant specializing in Canadian Express Entry, Provincial Nominees, and Australian Skilled Migration.")
   );
   const [avatarBg, setAvatarBg] = useState("bg-blue-600");
@@ -278,8 +272,8 @@ export const SettingsAccountView: React.FC = () => {
           { id: "preferences", label: "Regional & Formats", icon: Globe },
           {
             id: "roleSpecific",
-            label: currentRole === "client" ? "Case Disclosures" : currentRole === "super_admin" ? "Data Governance" : "Practice & Office",
-            icon: currentRole === "client" ? FileText : currentRole === "super_admin" ? Lock : Briefcase,
+            label: currentRole === "super_admin" ? "Data Governance" : "Practice & Office",
+            icon: currentRole === "super_admin" ? Lock : Briefcase,
           },
         ].map((tab) => {
           const Icon = tab.icon;
@@ -872,58 +866,7 @@ export const SettingsAccountView: React.FC = () => {
       {/* Tab 5: Role-Specific Extended Panel */}
       {activeTab === "roleSpecific" && (
         <div className="bg-white rounded-2xl border border-slate-200/80 shadow-xs p-6 space-y-6">
-          {currentRole === "client" ? (
-            <div className="space-y-4">
-              <div>
-                <h2 className="text-base font-bold text-slate-900">Legal Representation & Emergency Information</h2>
-                <p className="text-xs text-slate-500 mt-0.5">
-                  Designate emergency family contacts and monitor your travel document validity.
-                </p>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">Emergency Next-of-Kin Full Name</label>
-                  <input
-                    type="text"
-                    value={emergencyContactName}
-                    onChange={(e) => setEmergencyContactName(e.target.value)}
-                    className="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-xl font-medium"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">Emergency Contact Phone</label>
-                  <input
-                    type="tel"
-                    value={emergencyContactPhone}
-                    onChange={(e) => setEmergencyContactPhone(e.target.value)}
-                    className="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-xl font-medium"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">Current Passport Expiry Date</label>
-                  <input
-                    type="date"
-                    value={passportExpiryNotice}
-                    onChange={(e) => setPassportExpiryNotice(e.target.value)}
-                    className="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-xl font-medium"
-                  />
-                  <p className="text-[11px] text-blue-600 font-semibold mt-1">
-                    ✓ Valid for {">"} 6 months beyond target lodgement date.
-                  </p>
-                </div>
-
-                <div className="p-3 bg-blue-50 rounded-xl border border-blue-200 flex flex-col justify-center">
-                  <span className="text-xs font-bold text-blue-900">Authorized Legal Representative</span>
-                  <p className="text-[11px] text-blue-800 mt-0.5">
-                    Elena Vance, Esq. (RCIC #R53210 / Ontario Bar Association). IMM 5476 authority filed.
-                  </p>
-                </div>
-              </div>
-            </div>
-          ) : currentRole === "super_admin" ? (
+          {currentRole === "super_admin" ? (
             <div className="space-y-4">
               <div>
                 <h2 className="text-base font-bold text-slate-900">Enterprise Data Governance & GDPR / PIPEDA</h2>
@@ -961,9 +904,9 @@ export const SettingsAccountView: React.FC = () => {
           ) : (
             <div className="space-y-4">
               <div>
-                <h2 className="text-base font-bold text-slate-900">Legal Consultation & Practice Settings</h2>
+                <h2 className="text-base font-bold text-slate-900">Legal Practice & Operations Config</h2>
                 <p className="text-xs text-slate-500 mt-0.5">
-                  Configure your weekly consultation booking slots, meeting room link, and out-of-office autoreply.
+                  Configure your designated booking links and out-of-office legal responders.
                 </p>
               </div>
 
