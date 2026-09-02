@@ -157,10 +157,10 @@ export function DataTable<T extends Record<string, any>>({
     <div className="space-y-4">
       {/* Controls Bar: Search, Filters, Export */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white p-3.5 rounded-xl border border-slate-200/80 shadow-xs">
-        <div className="flex flex-wrap items-center gap-2.5 flex-1">
+        <div className="flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center gap-2.5 flex-1">
           {/* Search box */}
           {!hideSearch && (
-            <div className="relative flex-1 min-w-[220px] max-w-md">
+            <div className="relative flex-1 min-w-0 sm:min-w-[220px] max-w-none sm:max-w-md w-full">
               <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
               <input
                 type="text"
@@ -177,7 +177,7 @@ export function DataTable<T extends Record<string, any>>({
 
           {/* Filter Dropdowns */}
           {filterOptions?.map((filter) => (
-            <div key={String(filter.key)} className="flex items-center gap-1.5">
+            <div key={String(filter.key)} className="flex items-center gap-1.5 w-full sm:w-auto">
               <span className="text-xs font-medium text-slate-500 hidden md:inline">{filter.label}:</span>
               <select
                 value={activeFilters[String(filter.key)] || "ALL"}
@@ -188,7 +188,7 @@ export function DataTable<T extends Record<string, any>>({
                   }));
                   setCurrentPage(1);
                 }}
-                className="text-xs py-1.5 pl-2.5 pr-8 bg-slate-50 border border-slate-200 rounded-lg text-slate-700 font-medium focus:outline-hidden focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600"
+                className="text-xs py-1.5 pl-2.5 pr-8 bg-slate-50 border border-slate-200 rounded-lg text-slate-700 font-medium focus:outline-hidden focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 w-full sm:w-auto"
               >
                 <option value="ALL">All {filter.label}</option>
                 {filter.values.map((v) => (
@@ -202,11 +202,11 @@ export function DataTable<T extends Record<string, any>>({
         </div>
 
         {/* Custom Actions + Export Button */}
-        <div className="flex items-center gap-2 shrink-0 self-end sm:self-auto">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 shrink-0 w-full sm:w-auto mt-1 sm:mt-0">
           {actions}
           <button
             onClick={exportCSV}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 border border-slate-200 rounded-lg transition-colors"
+            className="inline-flex items-center justify-center gap-1.5 px-3 py-2 sm:py-1.5 text-xs font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 border border-slate-200 rounded-lg transition-colors w-full sm:w-auto"
             title="Export filtered records to CSV"
           >
             <Download className="w-3.5 h-3.5 text-slate-500" />
@@ -282,8 +282,8 @@ export function DataTable<T extends Record<string, any>>({
         </div>
 
         {/* Table Footer: Item Counter + Pagination Controls */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-2.5 px-4 py-3 bg-slate-50/50 border-t border-slate-200/80 text-xs text-slate-500">
-          <div className="text-center sm:text-left">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-2.5 px-4 py-3 bg-slate-50/50 border-t border-slate-200/80 text-xs text-slate-500">
+          <div className="text-center sm:text-left w-full sm:w-auto">
             Showing <span className="font-semibold text-slate-800">{sortedData.length > 0 ? (currentPage - 1) * pageSize + 1 : 0}</span> to{" "}
             <span className="font-semibold text-slate-800">{Math.min(currentPage * pageSize, sortedData.length)}</span> of{" "}
             <span className="font-semibold text-slate-800">{sortedData.length}</span> entries

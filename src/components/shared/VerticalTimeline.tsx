@@ -54,9 +54,9 @@ export const VerticalTimeline: React.FC<VerticalTimelineProps> = ({ events, clas
   };
 
   return (
-    <div className={cn("relative pl-6 sm:pl-8 space-y-8", className)}>
+    <div className={cn("relative pl-8 sm:pl-12 space-y-8", className)}>
       {/* Central continuous track line */}
-      <div className="absolute left-3.5 sm:left-4.5 top-3 bottom-4 w-0.5 bg-slate-200 -translate-x-1/2" />
+      <div className="absolute left-4 sm:left-6 top-3 bottom-4 w-0.5 bg-slate-200 -translate-x-1/2" />
 
       {events.map((event, index) => {
         const isCompleted = event.status === "completed";
@@ -67,7 +67,7 @@ export const VerticalTimeline: React.FC<VerticalTimelineProps> = ({ events, clas
             {/* Timeline node icon */}
             <div
               className={cn(
-                "absolute -left-6 sm:-left-8 top-0.5 flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 rounded-full border-2 transition-all -translate-x-1/2",
+                "absolute -left-4 sm:-left-6 top-0.5 flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 rounded-full border-2 transition-all -translate-x-1/2",
                 getStatusColor(event.status)
               )}
             >

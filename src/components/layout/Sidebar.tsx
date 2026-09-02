@@ -107,7 +107,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentPath, onNavigate, onClo
   };
 
   return (
-    <aside className="w-64 bg-slate-900 text-slate-300 flex flex-col h-full shrink-0 select-none border-r border-slate-800">
+    <aside className="w-64 bg-[#0a1120] text-slate-300 flex flex-col h-full shrink-0 select-none border-r border-slate-800">
       {/* Workspace Header */}
       <div className="p-3.5 border-b border-slate-800/80 bg-slate-950/40">
         <div className="flex items-center justify-between">
@@ -115,7 +115,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentPath, onNavigate, onClo
             <span className="text-[10px] font-extrabold uppercase tracking-wider text-sky-400">
               {getWorkspaceTitle()}
             </span>
-            <p className="text-xs text-slate-300 font-semibold mt-0.5 truncate">
+            <p className="text-[13px] text-slate-300 font-semibold mt-0.5 truncate">
               {currentUser?.name || "Dr. Alistair Sterling"}
             </p>
           </div>
