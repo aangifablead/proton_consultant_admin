@@ -15,11 +15,15 @@ import {
   CheckCircle2,
   Bell,
   Smartphone,
+  ToggleRight,
+  X,
+  ArrowUp,
+  ArrowDown,
+  Clock,
+  Users,
   Mail,
   MessageCircle,
-  ToggleLeft,
-  ToggleRight,
-  X
+  ToggleLeft
 } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 
@@ -27,14 +31,14 @@ export const AdminConfigView: React.FC = () => {
   const { addToast } = useAuth();
   const searchParams = useSearchParams();
   const tabParam = searchParams.get("tab");
-  const initialTab = (tabParam && ["visa", "stages", "rules", "templates", "notifications"].includes(tabParam)) 
+  const initialTab = (tabParam && ["visa", "stages", "rules", "tasks", "notifications"].includes(tabParam)) 
     ? (tabParam as any) 
     : "visa";
     
-  const [activeTab, setActiveTab] = useState<"visa" | "stages" | "rules" | "templates" | "notifications">(initialTab);
+  const [activeTab, setActiveTab] = useState<"visa" | "stages" | "rules" | "tasks" | "notifications">(initialTab);
 
   useEffect(() => {
-    if (tabParam && ["visa", "stages", "rules", "templates", "notifications"].includes(tabParam)) {
+    if (tabParam && ["visa", "stages", "rules", "tasks", "notifications"].includes(tabParam)) {
       setActiveTab(tabParam as any);
     }
   }, [tabParam]);
@@ -106,22 +110,41 @@ export const AdminConfigView: React.FC = () => {
 
   // Workflow stages
   const [stages, setStages] = useState([
-    { order: 1, name: "Consultation & Retainer", autoTask: "Generate Retainer Agreement" },
-    { order: 2, name: "Intake & Document Prep", autoTask: "Send Checklist & Form Link" },
-    { order: 3, name: "Application Review", autoTask: "Senior Counsel Quality Audit" },
-    { order: 4, name: "Government Lodgement", autoTask: "File with IRCC / ImmiAccount" },
-    { order: 5, name: "Biometrics & Medicals", autoTask: "Issue Clinic Referral Form" },
-    { order: 6, name: "Decision Pending", autoTask: "Monitor Processing Time API" },
-    { order: 7, name: "Approved / Visa Issued", autoTask: "Send Congratulations & Onboarding" },
+    { id: "1", order: 1, name: "Consultation & Retainer", autoTask: "Generate Retainer Agreement" },
+    { id: "2", order: 2, name: "Intake & Document Prep", autoTask: "Send Checklist & Form Link" },
+    { id: "3", order: 3, name: "Application Review", autoTask: "Senior Counsel Quality Audit" },
+    { id: "4", order: 4, name: "Government Lodgement", autoTask: "File with IRCC / ImmiAccount" },
+    { id: "5", order: 5, name: "Biometrics & Medicals", autoTask: "Issue Clinic Referral Form" },
+    { id: "6", order: 6, name: "Decision Pending", autoTask: "Monitor Processing Time API" },
+    { id: "7", order: 7, name: "Approved / Visa Issued", autoTask: "Send Congratulations & Onboarding" },
+  ]);
+
+  const moveStage = (index: number, direction: 'up' | 'down') => {
+    const newStages = [...stages];
+    if (direction === 'up' && index > 0) {
+      [newStages[index - 1], newStages[index]] = [newStages[index], newStages[index - 1]];
+    } else if (direction === 'down' && index < newStages.length - 1) {
+      [newStages[index + 1], newStages[index]] = [newStages[index], newStages[index + 1]];
+    }
+    // Update order numbers
+    newStages.forEach((st, i) => st.order = i + 1);
+    setStages(newStages);
+  };
+
+  // Task Templates
+  const [taskTemplates, setTaskTemplates] = useState([
+    { id: "1", title: "Conduct Initial Profile Assessment", assigneeRole: "Senior Counsel", deadlineOffset: "2 days after creation" },
+    { id: "2", title: "Review Submitted Documents", assigneeRole: "Case Manager", deadlineOffset: "1 day after upload" },
+    { id: "3", title: "Prepare Final Lodgement Packet", assigneeRole: "Admin", deadlineOffset: "3 days before target date" },
   ]);
 
   // Document Rules
   const [docRules, setDocRules] = useState([
-    { docName: "Passport Scan (All Pages)", category: "Civil Documents", required: true, maxFileSize: "10 MB" },
-    { docName: "Educational Credential Assessment (ECA)", category: "Academic Proof", required: true, maxFileSize: "15 MB" },
-    { docName: "Language Test Result Report (IELTS/PTE)", category: "Language Scorecard", required: true, maxFileSize: "5 MB" },
-    { docName: "6-Month Bank Balance Certificate", category: "Proof of Funds", required: true, maxFileSize: "10 MB" },
-    { docName: "Police Clearance Certificate", category: "Statutory Clearances", required: true, maxFileSize: "10 MB" },
+    { id: "1", docName: "Passport Scan (All Pages)", category: "Civil Documents", required: true, trackExpiry: true },
+    { id: "2", docName: "Educational Credential Assessment (ECA)", category: "Academic Proof", required: true, trackExpiry: false },
+    { id: "3", docName: "Language Test Result Report (IELTS/PTE)", category: "Language Scorecard", required: true, trackExpiry: true },
+    { id: "4", docName: "6-Month Bank Balance Certificate", category: "Proof of Funds", required: true, trackExpiry: false },
+    { id: "5", docName: "Police Clearance Certificate", category: "Statutory Clearances", required: true, trackExpiry: true },
   ]);
 
   const handleSave = () => {
@@ -159,7 +182,8 @@ export const AdminConfigView: React.FC = () => {
         {[
           { id: "visa", label: "Visa Categories & Fees" },
           { id: "stages", label: "Workflow Stages & Auto-Tasks" },
-          { id: "rules", label: "Checklist Matrix Rules" },
+          { id: "rules", label: "Document Checklists" },
+          { id: "tasks", label: "Task Templates" },
           { id: "notifications", label: "Notification Channels" },
         ].map((t) => (
           <button
@@ -215,25 +239,45 @@ export const AdminConfigView: React.FC = () => {
         <div className="bg-white rounded-2xl border border-slate-200/80 shadow-xs p-6 space-y-4">
           <div className="flex items-center justify-between">
             <h3 className="text-sm font-bold text-slate-900">Statutory Progression Pipeline</h3>
-            <span className="text-xs text-slate-500">7 Core Sequential Stages</span>
+            <button className="px-3 py-1.5 text-xs font-bold text-blue-800 bg-blue-50 hover:bg-blue-100 rounded-lg">
+              + Add Stage
+            </button>
           </div>
 
           <div className="space-y-2.5">
-            {stages.map((st) => (
+            {stages.map((st, idx) => (
               <div
-                key={st.order}
+                key={st.id}
                 className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-between text-xs"
               >
                 <div className="flex items-center gap-3">
-                  <GripVertical className="w-4 h-4 text-slate-400" />
+                  <div className="flex flex-col gap-1">
+                    <button 
+                      onClick={() => moveStage(idx, 'up')}
+                      disabled={idx === 0}
+                      className="text-slate-400 hover:text-blue-600 disabled:opacity-30 disabled:cursor-not-allowed"
+                    >
+                      <ArrowUp className="w-3 h-3" />
+                    </button>
+                    <button 
+                      onClick={() => moveStage(idx, 'down')}
+                      disabled={idx === stages.length - 1}
+                      className="text-slate-400 hover:text-blue-600 disabled:opacity-30 disabled:cursor-not-allowed"
+                    >
+                      <ArrowDown className="w-3 h-3" />
+                    </button>
+                  </div>
                   <span className="font-bold text-slate-400 w-5">0{st.order}</span>
                   <span className="font-bold text-slate-900">{st.name}</span>
                 </div>
-                <div className="flex items-center gap-2">
-                  <span className="text-slate-500">Auto Task:</span>
-                  <span className="font-semibold text-blue-800 bg-blue-50 px-2 py-0.5 rounded border border-blue-200">
-                    {st.autoTask}
-                  </span>
+                <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-2">
+                    <span className="text-slate-500">Auto Task:</span>
+                    <span className="font-semibold text-blue-800 bg-blue-50 px-2 py-0.5 rounded border border-blue-200">
+                      {st.autoTask}
+                    </span>
+                  </div>
+                  <button className="text-slate-400 hover:text-red-600"><Trash2 className="w-4 h-4" /></button>
                 </div>
               </div>
             ))}
@@ -245,19 +289,66 @@ export const AdminConfigView: React.FC = () => {
       {activeTab === "rules" && (
         <div className="bg-white rounded-2xl border border-slate-200/80 shadow-xs p-6 space-y-4">
           <div className="flex items-center justify-between">
-            <h3 className="text-sm font-bold text-slate-900">Mandatory Document Requirements</h3>
+            <h3 className="text-sm font-bold text-slate-900">Mandatory Document Checklists</h3>
+            <button className="px-3 py-1.5 text-xs font-bold text-blue-800 bg-blue-50 hover:bg-blue-100 rounded-lg">
+              + Add Requirement
+            </button>
           </div>
+          <p className="text-xs text-slate-500">Configure which documents are required for specific visa types and if they need expiry tracking.</p>
 
-          <div className="divide-y divide-slate-100">
-            {docRules.map((rule, idx) => (
-              <div key={idx} className="py-3 flex items-center justify-between text-xs">
+          <div className="divide-y divide-slate-100 border border-slate-200 rounded-xl overflow-hidden">
+            {docRules.map((rule) => (
+              <div key={rule.id} className="p-4 flex items-center justify-between text-xs bg-slate-50/50 hover:bg-slate-50 transition-colors">
                 <div>
-                  <span className="font-bold text-slate-900 block">{rule.docName}</span>
-                  <span className="text-[11px] text-slate-400">{rule.category} • Max {rule.maxFileSize}</span>
+                  <span className="font-bold text-slate-900 block text-sm">{rule.docName}</span>
+                  <span className="text-[11px] text-slate-500">{rule.category}</span>
                 </div>
-                <span className="px-2 py-0.5 rounded bg-slate-200 text-slate-800 font-bold uppercase text-[10px]">
-                  {rule.required ? "Mandatory" : "Optional"}
-                </span>
+                <div className="flex items-center gap-4">
+                  <div className="flex flex-col gap-1.5 items-end">
+                    <span className={cn("px-2 py-0.5 rounded font-bold uppercase text-[10px]", rule.required ? "bg-red-50 text-red-700 border border-red-200" : "bg-slate-200 text-slate-700")}>
+                      {rule.required ? "Mandatory" : "Optional"}
+                    </span>
+                    {rule.trackExpiry && (
+                      <span className="text-[10px] text-amber-700 font-bold flex items-center gap-1 bg-amber-50 px-2 py-0.5 rounded border border-amber-200">
+                        <Clock className="w-3 h-3" /> Expiry Tracked
+                      </span>
+                    )}
+                  </div>
+                  <button className="text-slate-400 hover:text-red-600 ml-2"><Trash2 className="w-4 h-4" /></button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Tab 4: Task Templates */}
+      {activeTab === "tasks" && (
+        <div className="bg-white rounded-2xl border border-slate-200/80 shadow-xs p-6 space-y-4">
+          <div className="flex items-center justify-between">
+            <h3 className="text-sm font-bold text-slate-900">Automated Task Templates</h3>
+            <button className="px-3 py-1.5 text-xs font-bold text-blue-800 bg-blue-50 hover:bg-blue-100 rounded-lg">
+              + Add Task Template
+            </button>
+          </div>
+          <p className="text-xs text-slate-500">These tasks are automatically generated and assigned when a new case enters this visa stream.</p>
+
+          <div className="space-y-3">
+            {taskTemplates.map((task) => (
+              <div key={task.id} className="p-4 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-between text-xs hover:border-blue-300 transition-colors cursor-pointer">
+                <div className="flex items-center gap-3">
+                  <CheckSquare className="w-5 h-5 text-blue-500" />
+                  <div>
+                    <span className="font-bold text-slate-900 block text-sm">{task.title}</span>
+                    <span className="text-slate-500 text-[11px]">Offset: {task.deadlineOffset}</span>
+                  </div>
+                </div>
+                <div className="flex items-center gap-4">
+                  <span className="font-semibold text-slate-700 bg-white px-3 py-1 rounded border border-slate-200 shadow-xs flex items-center gap-1.5">
+                    <Users className="w-3 h-3 text-slate-400" /> Assignee: {task.assigneeRole}
+                  </span>
+                  <button className="text-slate-400 hover:text-red-600"><Trash2 className="w-4 h-4" /></button>
+                </div>
               </div>
             ))}
           </div>
