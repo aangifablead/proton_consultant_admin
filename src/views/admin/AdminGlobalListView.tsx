@@ -76,22 +76,22 @@ export const AdminGlobalListView: React.FC<AdminGlobalListViewProps> = ({ type }
                   items={[
                     {
                       label: "View Lead Details",
-                      icon: <Eye className="w-3.5 h-3.5" />,
+                      icon: <Eye className="w-3.5 h-3.5 text-slate-500" />,
                       onClick: (e) => { e.stopPropagation(); console.log("View Lead", row.id); }
                     },
                     {
                       label: "Reassign",
-                      icon: <UserPlus className="w-3.5 h-3.5" />,
+                      icon: <UserPlus className="w-3.5 h-3.5 text-blue-600" />,
                       onClick: (e) => { e.stopPropagation(); setReassignTarget(row); }
                     },
                     {
                       label: "Override Stage",
-                      icon: <RefreshCw className="w-3.5 h-3.5" />,
+                      icon: <RefreshCw className="w-3.5 h-3.5 text-amber-600" />,
                       onClick: (e) => { e.stopPropagation(); setOverrideTarget(row); }
                     },
                     {
                       label: "Convert to Client",
-                      icon: <FileCheck className="w-3.5 h-3.5" />,
+                      icon: <FileCheck className="w-3.5 h-3.5 text-emerald-600" />,
                       onClick: (e) => { e.stopPropagation(); setConvertTarget(row); }
                     },
                     {
@@ -137,7 +137,7 @@ export const AdminGlobalListView: React.FC<AdminGlobalListViewProps> = ({ type }
                   items={[
                     {
                       label: "View Case Details",
-                      icon: <Eye className="w-3.5 h-3.5" />,
+                      icon: <Eye className="w-3.5 h-3.5 text-slate-500" />,
                       onClick: (e) => {
                         e.stopPropagation();
                         setSelectedCase(row as Case);
@@ -145,12 +145,12 @@ export const AdminGlobalListView: React.FC<AdminGlobalListViewProps> = ({ type }
                     },
                     {
                       label: "Reassign",
-                      icon: <UserPlus className="w-3.5 h-3.5" />,
+                      icon: <UserPlus className="w-3.5 h-3.5 text-blue-600" />,
                       onClick: (e) => { e.stopPropagation(); setReassignTarget(row); }
                     },
                     {
                       label: "Override Stage",
-                      icon: <RefreshCw className="w-3.5 h-3.5" />,
+                      icon: <RefreshCw className="w-3.5 h-3.5 text-amber-600" />,
                       onClick: (e) => { e.stopPropagation(); setOverrideTarget(row); }
                     }
                   ]}
@@ -184,30 +184,29 @@ export const AdminGlobalListView: React.FC<AdminGlobalListViewProps> = ({ type }
             {
               header: "Actions",
               cell: (row: any) => (
-                <div className="flex items-center justify-end gap-1">
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setViewingDocument(row as DocumentItem);
-                    }}
-                    className="p-1.5 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
-                    title="View Document"
-                  >
-                    <Eye className="w-4 h-4" />
-                  </button>
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setDocumentToDelete(row as DocumentItem);
-                    }}
-                    className="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                    title="Delete Document"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </button>
-                </div>
+                <ActionMenu
+                  items={[
+                    {
+                      label: "View Document",
+                      icon: <Eye className="w-3.5 h-3.5 text-slate-500" />,
+                      onClick: (e) => {
+                        e.stopPropagation();
+                        setViewingDocument(row as DocumentItem);
+                      }
+                    },
+                    {
+                      label: "Delete Document",
+                      icon: <Trash2 className="w-3.5 h-3.5" />,
+                      danger: true,
+                      onClick: (e) => {
+                        e.stopPropagation();
+                        setDocumentToDelete(row as DocumentItem);
+                      }
+                    }
+                  ]}
+                />
               ),
-              className: "text-right w-24",
+              className: "text-right w-16",
             },
           ],
         };

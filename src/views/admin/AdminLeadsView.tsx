@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useAuth } from "../../context/AuthContext";
 import { DataTable } from "../../components/shared/DataTable";
 import { StatusBadge } from "../../components/shared/StatusBadge";
+import { ActionMenu } from "../../components/shared/ActionMenu";
 import { Lead } from "../../types";
 import { 
   Users, 
@@ -91,35 +92,36 @@ export const AdminLeadsView: React.FC = () => {
       <div className="text-xs text-slate-500">{row.lastActivity}</div>
     )},
     { header: "Actions", accessorKey: "actions", cell: (row: any) => (
-      <div className="flex items-center gap-1" onClick={(e) => e.stopPropagation()}>
-        <button 
-          onClick={() => { setSelectedLead(row); setIsProfileOpen(true); }}
-          className="p-1.5 hover:bg-slate-200 rounded-md text-slate-700 transition-colors mr-1"
-          title="View Details"
-        >
-          <Eye className="w-3.5 h-3.5" />
-        </button>
-        <button 
-          onClick={() => { setSelectedLead(row); setIsReassignModalOpen(true); }}
-          className="p-1.5 hover:bg-slate-200 rounded-md text-blue-600 transition-colors"
-          title="Reassign"
-        ><Users className="w-3.5 h-3.5" /></button>
-        <button 
-          onClick={() => { setSelectedLead(row); setIsOverrideModalOpen(true); }}
-          className="p-1.5 hover:bg-slate-200 rounded-md text-amber-600 transition-colors"
-          title="Override Stage"
-        ><AlertTriangle className="w-3.5 h-3.5" /></button>
-        <button 
-          onClick={() => { setSelectedLead(row); setIsConvertModalOpen(true); }}
-          className="p-1.5 hover:bg-slate-200 rounded-md text-emerald-600 transition-colors"
-          title="Convert to Client"
-        ><CheckCircle className="w-3.5 h-3.5" /></button>
-        <button 
-          onClick={() => { setSelectedLead(row); setIsRejectModalOpen(true); }}
-          className="p-1.5 hover:bg-slate-200 rounded-md text-rose-600 transition-colors"
-          title="Reject / Close"
-        ><XCircle className="w-3.5 h-3.5" /></button>
-      </div>
+      <ActionMenu
+        items={[
+          {
+            label: "View Details",
+            icon: <Eye className="w-3.5 h-3.5 text-slate-500" />,
+            onClick: (e) => { e.stopPropagation(); setSelectedLead(row); setIsProfileOpen(true); }
+          },
+          {
+            label: "Reassign",
+            icon: <Users className="w-3.5 h-3.5 text-blue-600" />,
+            onClick: (e) => { e.stopPropagation(); setSelectedLead(row); setIsReassignModalOpen(true); }
+          },
+          {
+            label: "Override Stage",
+            icon: <AlertTriangle className="w-3.5 h-3.5 text-amber-600" />,
+            onClick: (e) => { e.stopPropagation(); setSelectedLead(row); setIsOverrideModalOpen(true); }
+          },
+          {
+            label: "Convert to Client",
+            icon: <CheckCircle className="w-3.5 h-3.5 text-emerald-600" />,
+            onClick: (e) => { e.stopPropagation(); setSelectedLead(row); setIsConvertModalOpen(true); }
+          },
+          {
+            label: "Reject / Close",
+            icon: <XCircle className="w-3.5 h-3.5" />,
+            danger: true,
+            onClick: (e) => { e.stopPropagation(); setSelectedLead(row); setIsRejectModalOpen(true); }
+          }
+        ]}
+      />
     )}
   ];
 

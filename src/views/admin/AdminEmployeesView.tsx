@@ -10,8 +10,12 @@ import {
   CheckCircle2, 
   Mail, 
   X, 
-  Edit 
+  Edit,
+  Eye,
+  Trash2,
+  Edit2
 } from "lucide-react";
+import { ActionMenu } from "../../components/shared/ActionMenu";
 
 export const AdminEmployeesView: React.FC = () => {
   const { employees, addEmployee } = useAuth();
@@ -100,6 +104,7 @@ export const AdminEmployeesView: React.FC = () => {
                 <th className="py-3 px-4">Branch Office</th>
                 <th className="py-3 px-4">Caseload</th>
                 <th className="py-3 px-4">Conversion Rate</th>
+                <th className="py-3 px-4">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
@@ -122,6 +127,28 @@ export const AdminEmployeesView: React.FC = () => {
                   <td className="py-3.5 px-4 text-slate-700 font-medium">{emp.branch}</td>
                   <td className="py-3.5 px-4 font-bold text-slate-900">{emp.activeCasesCount} Cases</td>
                   <td className="py-3.5 px-4 font-bold text-emerald-700">{emp.conversionRate}%</td>
+                  <td className="py-3.5 px-4">
+                    <ActionMenu
+                      items={[
+                        {
+                          label: "View Profile",
+                          icon: <Eye className="w-3.5 h-3.5 text-slate-500" />,
+                          onClick: (e) => { e.stopPropagation(); console.log("View", emp.id); }
+                        },
+                        {
+                          label: "Edit Staff",
+                          icon: <Edit2 className="w-3.5 h-3.5 text-blue-600" />,
+                          onClick: (e) => { e.stopPropagation(); console.log("Edit", emp.id); }
+                        },
+                        {
+                          label: "Delete Account",
+                          icon: <Trash2 className="w-3.5 h-3.5" />,
+                          danger: true,
+                          onClick: (e) => { e.stopPropagation(); console.log("Delete", emp.id); }
+                        }
+                      ]}
+                    />
+                  </td>
                 </tr>
               ))}
             </tbody>
